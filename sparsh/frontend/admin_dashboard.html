@@ -1,0 +1,523 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Admin Dashboard - Srishti Care</title>
+  <link rel="stylesheet" href="css/style.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+
+  <!-- Mobile Header -->
+  <div class="mobile-header">
+    <div class="mobile-brand">
+      <i class="fas fa-heartbeat"></i> Srishti <span>Care</span>
+    </div>
+    <div class="hamburger" onclick="toggleSidebar()">
+      <i class="fas fa-bars"></i>
+    </div>
+  </div>
+
+  <div class="dashboard-layout">
+    
+    <!-- Sidebar Navigation -->
+    <aside class="sidebar" id="sidebar">
+      <div class="sidebar-brand">
+        <i class="fas fa-heartbeat"></i> Srishti <span>Care</span>
+      </div>
+      <ul class="sidebar-menu">
+        <li>
+          <a href="#" class="sidebar-link active" onclick="switchSection('overview', this)">
+            <i class="fas fa-chart-pie"></i> System Overview
+          </a>
+        </li>
+        <li>
+          <a href="#" class="sidebar-link" onclick="switchSection('doctors', this)">
+            <i class="fas fa-user-md"></i> Manage Doctors
+          </a>
+        </li>
+        <li>
+          <a href="#" class="sidebar-link" onclick="switchSection('patients', this)">
+            <i class="fas fa-user-injured"></i> Manage Patients
+          </a>
+        </li>
+        <li>
+          <a href="#" class="sidebar-link" onclick="switchSection('appointments', this)">
+            <i class="fas fa-calendar-check"></i> Manage Appointments
+          </a>
+        </li>
+      </ul>
+      <div class="sidebar-user">
+        <div class="sidebar-avatar">A</div>
+        <div class="sidebar-user-info">
+          <div class="sidebar-user-name" id="sidebarUserName">Admin Name</div>
+          <div class="sidebar-user-role">Administrator</div>
+        </div>
+        <i class="fas fa-sign-out-alt sidebar-logout" onclick="apiLogout()" title="Logout"></i>
+      </div>
+    </aside>
+
+    <!-- Main Content Area -->
+    <main class="main-content">
+      
+      <!-- Header -->
+      <div class="dashboard-header">
+        <div class="dashboard-title">
+          <h1>Admin Control Center</h1>
+          <p>System configuration, registrations verification, and database records auditing.</p>
+        </div>
+        <div class="dashboard-actions">
+          <button class="btn btn-secondary btn-sm" onclick="loadAdminDashboardData()">
+            <i class="fas fa-sync-alt"></i> Refresh Data
+          </button>
+        </div>
+      </div>
+
+      <!-- Stats Cards -->
+      <div class="dashboard-cards">
+        <div class="db-card">
+          <div class="db-card-icon icon-blue">
+            <i class="fas fa-user-md"></i>
+          </div>
+          <div class="db-card-info">
+            <h3 id="cardDoctors">0</h3>
+            <p>Total Doctors</p>
+          </div>
+        </div>
+        <div class="db-card">
+          <div class="db-card-icon icon-purple">
+            <i class="fas fa-user-injured"></i>
+          </div>
+          <div class="db-card-info">
+            <h3 id="cardPatients">0</h3>
+            <p>Total Patients</p>
+          </div>
+        </div>
+        <div class="db-card">
+          <div class="db-card-icon icon-green">
+            <i class="fas fa-calendar-check"></i>
+          </div>
+          <div class="db-card-info">
+            <h3 id="cardAppointments">0</h3>
+            <p>Total Bookings</p>
+          </div>
+        </div>
+        <div class="db-card">
+          <div class="db-card-icon icon-orange">
+            <i class="fas fa-users-cog"></i>
+          </div>
+          <div class="db-card-info">
+            <h3 id="cardActiveUsers">0</h3>
+            <p>Total User Accounts</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- SECTION: System Overview (Default) -->
+      <div id="section-overview" class="dashboard-section active">
+        <div class="dashboard-grid">
+          
+          <!-- Pending Doctor Verifications -->
+          <div class="panel-card">
+            <div class="panel-header">
+              <h2>Pending Doctor Activations</h2>
+              <a href="#" class="forgot-password" onclick="switchSection('doctors', document.querySelectorAll('.sidebar-link')[1])">View All</a>
+            </div>
+            <div class="table-wrapper">
+              <table>
+                <thead>
+                  <tr>
+                    <th>Doctor Name</th>
+                    <th>Specialization</th>
+                    <th>Qualification</th>
+                    <th>Actions</th>
+                  </tr>
+                </thead>
+                <tbody id="overviewPendingDoctorsBody">
+                  <tr>
+                    <td colspan="4" style="text-align: center; color: var(--text-light)">Loading records...</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+
+          <!-- Quick Actions & Reports summary -->
+          <div>
+            <div class="panel-card">
+              <div class="panel-header">
+                <h2>Administrative Advisory</h2>
+              </div>
+              <p style="font-size: 0.95rem; color: var(--text-light); margin-bottom: 16px;">
+                As an administrator, verify credentials before activating a registered Doctor profile. Deleting user accounts is permanent and cascade-removes corresponding schedules/records.
+              </p>
+              <div style="background-color: var(--primary-light); color: var(--primary); padding: 16px; border-radius: var(--radius-md); font-weight: 500; font-size: 0.9rem;">
+                <i class="fas fa-shield-alt"></i> <strong>Srishti Care Security:</strong> Session credentials invalidate after 2 hours of inactivity.
+              </div>
+            </div>
+          </div>
+
+        </div>
+      </div>
+
+      <!-- SECTION: Manage Doctors -->
+      <div id="section-doctors" class="dashboard-section">
+        <div class="dashboard-grid single-col">
+          <div class="panel-card">
+            <div class="panel-header">
+              <h2>Registered Practitioner Accounts</h2>
+            </div>
+            <div class="table-wrapper">
+              <table>
+                <thead>
+                  <tr>
+                    <th>Doctor ID</th>
+                    <th>Name</th>
+                    <th>Phone</th>
+                    <th>Specialization</th>
+                    <th>Qualification</th>
+                    <th>Availability</th>
+                    <th>Status</th>
+                    <th>Actions</th>
+                  </tr>
+                </thead>
+                <tbody id="doctorsTableBody">
+                  <tr>
+                    <td colspan="8" style="text-align: center; color: var(--text-light)">Loading records...</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- SECTION: Manage Patients -->
+      <div id="section-patients" class="dashboard-section">
+        <div class="dashboard-grid single-col">
+          <div class="panel-card">
+            <div class="panel-header">
+              <h2>Registered Patient Accounts</h2>
+            </div>
+            <div class="table-wrapper">
+              <table>
+                <thead>
+                  <tr>
+                    <th>Patient ID</th>
+                    <th>Name</th>
+                    <th>Email</th>
+                    <th>Phone</th>
+                    <th>Age / Gender</th>
+                    <th>Residential Address</th>
+                    <th>Actions</th>
+                  </tr>
+                </thead>
+                <tbody id="patientsTableBody">
+                  <tr>
+                    <td colspan="7" style="text-align: center; color: var(--text-light)">Loading records...</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- SECTION: Manage Appointments -->
+      <div id="section-appointments" class="dashboard-section">
+        <div class="dashboard-grid single-col">
+          <div class="panel-card">
+            <div class="panel-header">
+              <h2>System-Wide Consultation Bookings</h2>
+            </div>
+            <div class="table-wrapper">
+              <table>
+                <thead>
+                  <tr>
+                    <th>Booking ID</th>
+                    <th>Patient Name</th>
+                    <th>Consulting Doctor</th>
+                    <th>Scheduled Date</th>
+                    <th>Time Slot</th>
+                    <th>Symptoms Description</th>
+                    <th>Status</th>
+                    <th>Actions</th>
+                  </tr>
+                </thead>
+                <tbody id="appointmentsTableBody">
+                  <tr>
+                    <td colspan="8" style="text-align: center; color: var(--text-light)">Loading records...</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </main>
+  </div>
+
+  <script src="js/app.js"></script>
+  <script>
+    // Enforce Admin guard checking
+    const session = checkAuthGuard('admin');
+    if (!session) {
+      // Exit if redirecting
+    } else {
+      document.getElementById('sidebarUserName').textContent = session.name;
+    }
+
+    function switchSection(sectionId, element) {
+      document.querySelectorAll('.dashboard-section').forEach(sec => sec.classList.remove('active'));
+      const activeSec = document.getElementById(`section-${sectionId}`);
+      if (activeSec) activeSec.classList.add('active');
+
+      document.querySelectorAll('.sidebar-link').forEach(link => link.classList.remove('active'));
+      if (element) element.classList.add('active');
+
+      const sidebar = document.getElementById('sidebar');
+      if (sidebar.classList.contains('active')) {
+        sidebar.classList.remove('active');
+      }
+    }
+
+    function toggleSidebar() {
+      document.getElementById('sidebar').classList.toggle('active');
+    }
+
+    document.addEventListener("DOMContentLoaded", () => {
+      loadAdminDashboardData();
+    });
+
+    async function loadAdminDashboardData() {
+      try {
+        await Promise.all([
+          loadStats(),
+          loadDoctorsList(),
+          loadPatientsList(),
+          loadAppointmentsList()
+        ]);
+      } catch (err) {
+        showToast('Sync Error', 'Failed to retrieve administrative records.', 'danger');
+      }
+    }
+
+    async function loadStats() {
+      try {
+        const stats = await apiRequest('/api/admin/stats');
+        
+        document.getElementById('cardDoctors').textContent = stats.total_doctors;
+        document.getElementById('cardPatients').textContent = stats.total_patients;
+        document.getElementById('cardAppointments').textContent = stats.total_appointments;
+        document.getElementById('cardActiveUsers').textContent = stats.active_users;
+      } catch (e) {
+        console.error("Error loading stats", e);
+      }
+    }
+
+    async function loadDoctorsList() {
+      try {
+        const docs = await apiRequest('/api/admin/doctors');
+        
+        // Render pending on Overview
+        const pendingBody = document.getElementById('overviewPendingDoctorsBody');
+        const pendingDocs = docs.filter(d => !d.is_approved);
+
+        if (pendingDocs.length === 0) {
+          pendingBody.innerHTML = '<tr><td colspan="4" style="text-align: center; color: var(--text-light)">No pending doctor activations.</td></tr>';
+        } else {
+          pendingBody.innerHTML = '';
+          pendingDocs.forEach(d => {
+            const tr = document.createElement('tr');
+            tr.innerHTML = `
+              <td><strong>${d.user.name}</strong><br><small style="color:var(--text-light)">${d.user.email}</small></td>
+              <td>${d.specialization}</td>
+              <td>${d.qualification}</td>
+              <td>
+                <button class="btn btn-primary btn-sm" style="padding: 4px 12px; font-size: 0.8rem;" onclick="approveDoctor(${d.doctor_id})">
+                  <i class="fas fa-check-double"></i> Activate
+                </button>
+              </td>
+            `;
+            pendingBody.appendChild(tr);
+          });
+        }
+
+        // Render complete Doctors Table
+        const fullBody = document.getElementById('doctorsTableBody');
+        if (docs.length === 0) {
+          fullBody.innerHTML = '<tr><td colspan="8" style="text-align: center; color: var(--text-light)">No doctor accounts registered.</td></tr>';
+          return;
+        }
+
+        fullBody.innerHTML = '';
+        docs.forEach(d => {
+          const statusBadge = d.is_approved ? 'badge-approved' : 'badge-pending';
+          const statusText = d.is_approved ? 'Active' : 'Pending Verification';
+          
+          let actionHTML = '';
+          if (!d.is_approved) {
+            actionHTML += `
+              <button class="action-btn btn-approve" onclick="approveDoctor(${d.doctor_id})" title="Activate Profile">
+                <i class="fas fa-check"></i>
+              </button>
+            `;
+          }
+          actionHTML += `
+            <button class="action-btn btn-reject" onclick="deleteUserAccount(${d.doctor_id}, 'doctor')" title="Delete Account">
+              <i class="fas fa-trash-alt"></i>
+            </button>
+          `;
+
+          const tr = document.createElement('tr');
+          tr.innerHTML = `
+            <td>#DOC-${d.doctor_id}</td>
+            <td><strong>${d.user.name}</strong><br><small style="color:var(--text-light)">${d.user.email}</small></td>
+            <td>${d.phone || '-'}</td>
+            <td>${d.specialization}</td>
+            <td>${d.qualification}</td>
+            <td><small>${d.availability}</small></td>
+            <td><span class="badge ${statusBadge}">${statusText}</span></td>
+            <td><div class="table-actions">${actionHTML}</div></td>
+          `;
+          fullBody.appendChild(tr);
+        });
+
+      } catch (e) {
+        console.error("Error loading doctors", e);
+      }
+    }
+
+    async function approveDoctor(docId) {
+      try {
+        await apiRequest(`/api/admin/doctors/${docId}/approve`, { method: 'PUT' });
+        showToast('Approved', 'Practitioner account activated successfully.', 'success');
+        
+        // Reload data
+        await loadAdminDashboardData();
+      } catch (err) {
+        showToast('Action Failed', err.message, 'danger');
+      }
+    }
+
+    async function loadPatientsList() {
+      try {
+        const patients = await apiRequest('/api/admin/patients');
+        const body = document.getElementById('patientsTableBody');
+
+        if (patients.length === 0) {
+          body.innerHTML = '<tr><td colspan="7" style="text-align: center; color: var(--text-light)">No patient accounts registered.</td></tr>';
+          return;
+        }
+
+        body.innerHTML = '';
+        patients.forEach(p => {
+          const tr = document.createElement('tr');
+          tr.innerHTML = `
+            <td>#PAT-${p.patient_id}</td>
+            <td><strong>${p.user.name}</strong></td>
+            <td>${p.user.email}</td>
+            <td>${p.phone || '-'}</td>
+            <td>${p.age || '-'} / ${p.gender || '-'}</td>
+            <td><small>${p.address || '-'}</small></td>
+            <td>
+              <button class="action-btn btn-reject" onclick="deleteUserAccount(${p.patient_id}, 'patient')" title="Delete Patient">
+                <i class="fas fa-trash-alt"></i>
+              </button>
+            </td>
+          `;
+          body.appendChild(tr);
+        });
+
+      } catch (e) {
+        console.error("Error loading patients", e);
+      }
+    }
+
+    async function loadAppointmentsList() {
+      try {
+        // Hitting unified appointments listing (since user role is admin, it fetches all)
+        const appointments = await apiRequest('/api/appointments');
+        const body = document.getElementById('appointmentsTableBody');
+        const sorted = [...appointments].reverse();
+
+        if (sorted.length === 0) {
+          body.innerHTML = '<tr><td colspan="8" style="text-align: center; color: var(--text-light)">No scheduling bookings found.</td></tr>';
+          return;
+        }
+
+        body.innerHTML = '';
+        sorted.forEach(app => {
+          const formattedDate = new Date(app.appointment_date).toLocaleDateString('en-US', { day: 'numeric', month: 'short', year: 'numeric' });
+          const badgeClass = getStatusBadgeClass(app.status);
+          
+          let cancelBtn = '';
+          if (app.status === 'Pending' || app.status === 'Approved') {
+            cancelBtn = `
+              <button class="btn btn-outline btn-sm" style="padding:4px 8px; font-size:0.8rem;" onclick="adminCancelAppointment(${app.appointment_id})">
+                Cancel
+              </button>
+            `;
+          } else {
+            cancelBtn = `<span style="font-size:0.8rem; color:var(--text-light)">No action</span>`;
+          }
+
+          const tr = document.createElement('tr');
+          tr.innerHTML = `
+            <td>#APT-${app.appointment_id}</td>
+            <td><strong>${app.patient_name}</strong></td>
+            <td>Dr. ${app.doctor_name} (${app.doctor_specialization})</td>
+            <td>${formattedDate}</td>
+            <td>${app.appointment_time}</td>
+            <td><small>${app.symptoms || '-'}</small></td>
+            <td><span class="badge ${badgeClass}">${app.status}</span></td>
+            <td>${cancelBtn}</td>
+          `;
+          body.appendChild(tr);
+        });
+
+      } catch (e) {
+        console.error("Error loading appointments", e);
+      }
+    }
+
+    async function adminCancelAppointment(appId) {
+      if (!confirm('Are you sure you want to cancel this appointment?')) return;
+      try {
+        await apiRequest(`/api/appointments/${appId}/status`, {
+          method: 'PUT',
+          body: JSON.stringify({ status: 'Cancelled' })
+        });
+        showToast('Cancelled', 'Appointment has been cancelled.', 'success');
+        await loadAppointmentsList();
+        await loadStats();
+      } catch (e) {
+        showToast('Action Failed', e.message, 'danger');
+      }
+    }
+
+    async function deleteUserAccount(userId, role) {
+      if (!confirm(`Are you sure you want to permanently delete this ${role} account? This action is irreversible.`)) return;
+      
+      try {
+        await apiRequest(`/api/admin/users/${userId}`, { method: 'DELETE' });
+        showToast('Deleted', `${role.charAt(0).toUpperCase() + role.slice(1)} user account deleted successfully.`, 'success');
+        
+        // Reload all data
+        await loadAdminDashboardData();
+      } catch (err) {
+        showToast('Deletion Failed', err.message, 'danger');
+      }
+    }
+
+    function getStatusBadgeClass(status) {
+      if (status === 'Approved') return 'badge-approved';
+      if (status === 'Pending') return 'badge-pending';
+      if (status === 'Rejected') return 'badge-rejected';
+      return 'badge-cancelled';
+    }
+  </script>
+</body>
+</html>

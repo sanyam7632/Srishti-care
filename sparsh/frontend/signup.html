@@ -1,0 +1,276 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Sign Up - Srishti Care</title>
+  <link rel="stylesheet" href="css/style.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+  
+  <div class="auth-wrapper">
+    <div class="auth-card" style="max-width: 650px;">
+      <div class="auth-header">
+        <a href="index.html" class="logo" style="justify-content: center; margin-bottom: 16px;">
+          <i class="fas fa-heartbeat"></i> Srishti <span>Care</span>
+        </a>
+        <h2>Create an Account</h2>
+        <p>Register as a Patient or Doctor to get started</p>
+      </div>
+
+      <!-- Tabs to switch registration forms -->
+      <div class="signup-tabs">
+        <div class="signup-tab active" id="tabPatient" onclick="switchForm('patient')">
+          <i class="fas fa-user-injured"></i> Patient Registration
+        </div>
+        <div class="signup-tab" id="tabDoctor" onclick="switchForm('doctor')">
+          <i class="fas fa-user-md"></i> Doctor Registration
+        </div>
+      </div>
+
+      <!-- Patient Form -->
+      <form id="patientForm" class="signup-form">
+        <div class="form-row">
+          <div class="form-group">
+            <label for="pName">Full Name</label>
+            <input type="text" id="pName" class="form-control" placeholder="John Doe" required>
+          </div>
+          <div class="form-group">
+            <label for="pEmail">Email Address</label>
+            <input type="email" id="pEmail" class="form-control" placeholder="john@example.com" required>
+          </div>
+        </div>
+
+        <div class="form-row">
+          <div class="form-group">
+            <label for="pPhone">Phone Number</label>
+            <input type="tel" id="pPhone" class="form-control" placeholder="9876543210" required>
+          </div>
+          <div class="form-group">
+            <label for="pAge">Age</label>
+            <input type="number" id="pAge" class="form-control" placeholder="30" min="1" max="120" required>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label for="pGender">Gender</label>
+          <select id="pGender" class="form-control" required>
+            <option value="" disabled selected>Select Gender</option>
+            <option value="Male">Male</option>
+            <option value="Female">Female</option>
+            <option value="Other">Other</option>
+          </select>
+        </div>
+
+        <div class="form-group">
+          <label for="pAddress">Residential Address</label>
+          <textarea id="pAddress" class="form-control" rows="2" placeholder="House No, Street, City..." required></textarea>
+        </div>
+
+        <div class="form-row">
+          <div class="form-group">
+            <label for="pPassword">Password</label>
+            <input type="password" id="pPassword" class="form-control" placeholder="Min 6 characters" required autocomplete="new-password">
+          </div>
+          <div class="form-group">
+            <label for="pConfirmPassword">Confirm Password</label>
+            <input type="password" id="pConfirmPassword" class="form-control" placeholder="Repeat password" required autocomplete="new-password">
+          </div>
+        </div>
+
+        <button type="submit" class="btn btn-primary auth-submit-btn">
+          <i class="fas fa-user-plus"></i> Register as Patient
+        </button>
+      </form>
+
+      <!-- Doctor Form (Hidden by default) -->
+      <form id="doctorForm" class="signup-form" style="display: none;">
+        <div class="form-row">
+          <div class="form-group">
+            <label for="dName">Full Name</label>
+            <input type="text" id="dName" class="form-control" placeholder="Dr. Jane Smith" required>
+          </div>
+          <div class="form-group">
+            <label for="dEmail">Email Address</label>
+            <input type="email" id="dEmail" class="form-control" placeholder="jane.smith@example.com" required>
+          </div>
+        </div>
+
+        <div class="form-row">
+          <div class="form-group">
+            <label for="dPhone">Phone Number</label>
+            <input type="tel" id="dPhone" class="form-control" placeholder="9876543210" required>
+          </div>
+          <div class="form-group">
+            <label for="dSpecialization">Specialization</label>
+            <input type="text" id="dSpecialization" class="form-control" placeholder="e.g. Cardiology, Pediatrics" required>
+          </div>
+        </div>
+
+        <div class="form-row">
+          <div class="form-group">
+            <label for="dExperience">Experience (Years)</label>
+            <input type="number" id="dExperience" class="form-control" placeholder="e.g. 5" min="0" required>
+          </div>
+          <div class="form-group">
+            <label for="dQualification">Qualification</label>
+            <input type="text" id="dQualification" class="form-control" placeholder="e.g. MBBS, MD" required>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label for="dAvailability">Availability Slots / Timings</label>
+          <input type="text" id="dAvailability" class="form-control" placeholder="e.g. Mon-Fri 09:00 AM - 01:00 PM" required>
+        </div>
+
+        <div class="form-row">
+          <div class="form-group">
+            <label for="dPassword">Password</label>
+            <input type="password" id="dPassword" class="form-control" placeholder="Min 6 characters" required autocomplete="new-password">
+          </div>
+          <div class="form-group">
+            <label for="dConfirmPassword">Confirm Password</label>
+            <input type="password" id="dConfirmPassword" class="form-control" placeholder="Repeat password" required autocomplete="new-password">
+          </div>
+        </div>
+
+        <div class="form-group" style="background-color: var(--warning-light); color: var(--warning); padding: 12px; border-radius: var(--radius-md); font-size: 0.85rem; font-weight: 500; border: 1px solid rgba(245, 158, 11, 0.2); margin-top: 10px;">
+          <i class="fas fa-info-circle"></i> Note: Doctor accounts require administrative approval before you can access the dashboard.
+        </div>
+
+        <button type="submit" class="btn btn-primary auth-submit-btn" style="margin-top: 15px;">
+          <i class="fas fa-user-md"></i> Register as Doctor
+        </button>
+      </form>
+
+      <div class="auth-footer">
+        <p>Already have an account? <a href="login.html">Login here</a></p>
+      </div>
+    </div>
+  </div>
+
+  <script src="js/app.js"></script>
+  <script>
+    let activeRole = 'patient';
+
+    function switchForm(role) {
+      activeRole = role;
+      
+      const tabPatient = document.getElementById('tabPatient');
+      const tabDoctor = document.getElementById('tabDoctor');
+      const patientForm = document.getElementById('patientForm');
+      const doctorForm = document.getElementById('doctorForm');
+
+      if (role === 'patient') {
+        tabPatient.classList.add('active');
+        tabDoctor.classList.remove('active');
+        patientForm.style.display = 'block';
+        doctorForm.style.display = 'none';
+      } else {
+        tabDoctor.classList.add('active');
+        tabPatient.classList.remove('active');
+        doctorForm.style.display = 'block';
+        patientForm.style.display = 'none';
+      }
+    }
+
+    // Patient Form Submit Handler
+    document.getElementById('patientForm').addEventListener('submit', async (e) => {
+      e.preventDefault();
+      
+      const name = document.getElementById('pName').value.trim();
+      const email = document.getElementById('pEmail').value.trim();
+      const phone = document.getElementById('pPhone').value.trim();
+      const age = parseInt(document.getElementById('pAge').value);
+      const gender = document.getElementById('pGender').value;
+      const address = document.getElementById('pAddress').value.trim();
+      const password = document.getElementById('pPassword').value;
+      const confirmPassword = document.getElementById('pConfirmPassword').value;
+      const submitBtn = e.target.querySelector('.auth-submit-btn');
+
+      if (password !== confirmPassword) {
+        showToast('Password Mismatch', 'Passwords do not match.', 'warning');
+        return;
+      }
+
+      submitBtn.disabled = true;
+      submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Processing...';
+
+      try {
+        const responseData = await apiRequest('/api/patients/register', {
+          method: 'POST',
+          body: JSON.stringify({ name, email, phone, age, gender, address, password })
+        });
+
+        showToast('Account Created', 'Registration successful! Accessing dashboard...', 'success');
+        
+        saveSession(
+          responseData.access_token,
+          responseData.role,
+          responseData.name,
+          responseData.email
+        );
+
+        setTimeout(() => {
+          window.location.href = '/patient_dashboard.html';
+        }, 1200);
+
+      } catch (error) {
+        showToast('Registration Failed', error.message, 'danger');
+        submitBtn.disabled = false;
+        submitBtn.innerHTML = '<i class="fas fa-user-plus"></i> Register as Patient';
+      }
+    });
+
+    // Doctor Form Submit Handler
+    document.getElementById('doctorForm').addEventListener('submit', async (e) => {
+      e.preventDefault();
+      
+      const name = document.getElementById('dName').value.trim();
+      const email = document.getElementById('dEmail').value.trim();
+      const phone = document.getElementById('dPhone').value.trim();
+      const specialization = document.getElementById('dSpecialization').value.trim();
+      const experience = parseInt(document.getElementById('dExperience').value);
+      const qualification = document.getElementById('dQualification').value.trim();
+      const availability = document.getElementById('dAvailability').value.trim();
+      const password = document.getElementById('dPassword').value;
+      const confirmPassword = document.getElementById('dConfirmPassword').value;
+      const submitBtn = e.target.querySelector('.auth-submit-btn');
+
+      if (password !== confirmPassword) {
+        showToast('Password Mismatch', 'Passwords do not match.', 'warning');
+        return;
+      }
+
+      submitBtn.disabled = true;
+      submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Processing...';
+
+      try {
+        const responseData = await apiRequest('/api/doctors/register', {
+          method: 'POST',
+          body: JSON.stringify({ name, email, phone, specialization, experience, qualification, availability, password })
+        });
+
+        showToast('Account Created', 'Registration successful! Awaiting admin activation...', 'success');
+        
+        saveSession(
+          responseData.access_token,
+          responseData.role,
+          responseData.name,
+          responseData.email
+        );
+
+        setTimeout(() => {
+          window.location.href = '/doctor_dashboard.html';
+        }, 1500);
+
+      } catch (error) {
+        showToast('Registration Failed', error.message, 'danger');
+        submitBtn.disabled = false;
+        submitBtn.innerHTML = '<i class="fas fa-user-md"></i> Register as Doctor';
+      }
+    });
+  </script>
+</body>
+</html>

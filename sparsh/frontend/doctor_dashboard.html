@@ -1,0 +1,653 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Doctor Dashboard - Srishti Care</title>
+  <link rel="stylesheet" href="css/style.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+
+  <!-- Mobile Header -->
+  <div class="mobile-header">
+    <div class="mobile-brand">
+      <i class="fas fa-heartbeat"></i> Srishti <span>Care</span>
+    </div>
+    <div class="hamburger" onclick="toggleSidebar()">
+      <i class="fas fa-bars"></i>
+    </div>
+  </div>
+
+  <!-- PENDING APPROVAL SCREEN (Hidden by default) -->
+  <div id="pendingApprovalScreen" style="display:none; min-height: 100vh; flex-direction: column; align-items: center; justify-content: center; padding: 40px; text-align: center; background: radial-gradient(circle at top right, var(--primary-light) 0%, transparent 35%), radial-gradient(circle at bottom left, #eff6ff 0%, transparent 35%);">
+    <div class="auth-card" style="max-width: 550px; padding: 50px 40px;">
+      <i class="fas fa-user-clock" style="font-size: 4rem; color: var(--warning); margin-bottom: 24px; animation: pulse 2s infinite;"></i>
+      <h2 style="color: var(--secondary); margin-bottom: 12px;">Profile Awaiting Approval</h2>
+      <p style="color: var(--text-light); margin-bottom: 30px; font-size: 1.05rem;">
+        Your doctor registration has been received successfully. To maintain patient safety, Srishti Care administrators must verify and activate your profile.
+      </p>
+      <div style="background-color: var(--warning-light); color: var(--warning); padding: 16px; border-radius: var(--radius-md); font-weight: 500; font-size: 0.9rem; margin-bottom: 30px; border: 1px solid rgba(245, 158, 11, 0.2);">
+        <i class="fas fa-info-circle"></i> Status: <strong>Pending Verification</strong>
+      </div>
+      <button onclick="apiLogout()" class="btn btn-outline" style="width: 100%;">
+        <i class="fas fa-sign-out-alt"></i> Logout / Go Back
+      </button>
+    </div>
+  </div>
+
+  <!-- NORMAL DOCTOR DASHBOARD (Hidden by default) -->
+  <div id="normalDashboard" style="display:none;">
+    <div class="dashboard-layout">
+      
+      <!-- Sidebar Navigation -->
+      <aside class="sidebar" id="sidebar">
+        <div class="sidebar-brand">
+          <i class="fas fa-heartbeat"></i> Srishti <span>Care</span>
+        </div>
+        <ul class="sidebar-menu">
+          <li>
+            <a href="#" class="sidebar-link active" onclick="switchSection('overview', this)">
+              <i class="fas fa-house-medical"></i> Overview / Today
+            </a>
+          </li>
+          <li>
+            <a href="#" class="sidebar-link" onclick="switchSection('appointments', this)">
+              <i class="fas fa-calendar-check"></i> Manage Appointments
+            </a>
+          </li>
+          <li>
+            <a href="#" class="sidebar-link" onclick="switchSection('prescription', this)">
+              <i class="fas fa-file-prescription"></i> Add Prescription
+            </a>
+          </li>
+          <li>
+            <a href="#" class="sidebar-link" onclick="switchSection('profile', this)">
+              <i class="fas fa-user-md"></i> Manage Profile
+            </a>
+          </li>
+        </ul>
+        <div class="sidebar-user">
+          <div class="sidebar-avatar" id="sidebarAvatar">D</div>
+          <div class="sidebar-user-info">
+            <div class="sidebar-user-name" id="sidebarUserName">Dr. Practitioner</div>
+            <div class="sidebar-user-role">Doctor</div>
+          </div>
+          <i class="fas fa-sign-out-alt sidebar-logout" onclick="apiLogout()" title="Logout"></i>
+        </div>
+      </aside>
+
+      <!-- Main Content Area -->
+      <main class="main-content">
+        
+        <!-- Header -->
+        <div class="dashboard-header">
+          <div class="dashboard-title">
+            <h1 id="welcomeText">Welcome Practitioner!</h1>
+            <p>Review appointments, patients, and draft prescription plans.</p>
+          </div>
+          <div class="dashboard-actions">
+            <button class="btn btn-primary btn-sm" onclick="switchSection('prescription', document.querySelectorAll('.sidebar-link')[2])">
+              <i class="fas fa-file-plus"></i> New Prescription
+            </button>
+          </div>
+        </div>
+
+        <!-- Stats Cards -->
+        <div class="dashboard-cards">
+          <div class="db-card">
+            <div class="db-card-icon icon-blue">
+              <i class="fas fa-hospital-user"></i>
+            </div>
+            <div class="db-card-info">
+              <h3 id="cardToday">0</h3>
+              <p>Today's Appointments</p>
+            </div>
+          </div>
+          <div class="db-card">
+            <div class="db-card-icon icon-purple">
+              <i class="fas fa-users"></i>
+            </div>
+            <div class="db-card-info">
+              <h3 id="cardPatients">0</h3>
+              <p>Total Unique Patients</p>
+            </div>
+          </div>
+          <div class="db-card">
+            <div class="db-card-icon icon-orange">
+              <i class="fas fa-spinner"></i>
+            </div>
+            <div class="db-card-info">
+              <h3 id="cardPending">0</h3>
+              <p>Pending Approvals</p>
+            </div>
+          </div>
+          <div class="db-card">
+            <div class="db-card-icon icon-green">
+              <i class="fas fa-check-double"></i>
+            </div>
+            <div class="db-card-info">
+              <h3 id="cardCompleted">0</h3>
+              <p>Completed Visits</p>
+            </div>
+          </div>
+        </div>
+
+        <!-- SECTION: Overview (Today's Slots & Pending Requests) -->
+        <div id="section-overview" class="dashboard-section active">
+          <div class="dashboard-grid">
+            
+            <!-- Pending Requests -->
+            <div class="panel-card">
+              <div class="panel-header">
+                <h2>Pending Approval Requests</h2>
+                <a href="#" class="forgot-password" onclick="switchSection('appointments', document.querySelectorAll('.sidebar-link')[1])">View All</a>
+              </div>
+              <div class="table-wrapper">
+                <table>
+                  <thead>
+                    <tr>
+                      <th>Patient</th>
+                      <th>Date</th>
+                      <th>Time Slot</th>
+                      <th>Symptoms</th>
+                      <th>Actions</th>
+                    </tr>
+                  </thead>
+                  <tbody id="overviewPendingBody">
+                    <tr>
+                      <td colspan="5" style="text-align: center; color: var(--text-light)">Loading records...</td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+
+            <!-- Today's Schedule -->
+            <div class="panel-card">
+              <div class="panel-header">
+                <h2>Today's Confirmed Slots</h2>
+              </div>
+              <div class="list-items" id="todayScheduleList">
+                <div style="text-align: center; color: var(--text-light); padding: 20px 0;">Loading records...</div>
+              </div>
+            </div>
+
+          </div>
+        </div>
+
+        <!-- SECTION: Manage Appointments (Complete List) -->
+        <div id="section-appointments" class="dashboard-section">
+          <div class="dashboard-grid single-col">
+            <div class="panel-card">
+              <div class="panel-header">
+                <h2>Complete Booked Consultation History</h2>
+              </div>
+              <div class="table-wrapper">
+                <table>
+                  <thead>
+                    <tr>
+                      <th>Appointment ID</th>
+                      <th>Patient Name</th>
+                      <th>Contact Phone</th>
+                      <th>Date</th>
+                      <th>Time Slot</th>
+                      <th>Reason / Symptoms</th>
+                      <th>Status</th>
+                      <th>Actions</th>
+                    </tr>
+                  </thead>
+                  <tbody id="appointmentsHistoryBody">
+                    <tr>
+                      <td colspan="8" style="text-align: center; color: var(--text-light)">Loading records...</td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- SECTION: Issue Prescription Form -->
+        <div id="section-prescription" class="dashboard-section">
+          <div class="dashboard-grid single-col">
+            <div class="panel-card" style="max-width: 700px; margin: 0 auto;">
+              <div class="panel-header" style="border-bottom: 1px solid var(--border-color); padding-bottom: 16px;">
+                <h2>Draft Patient Health Prescription</h2>
+              </div>
+              <form id="prescriptionForm" style="margin-top: 24px;">
+                
+                <div class="form-row">
+                  <div class="form-group">
+                    <label for="presPatient">Select Patient</label>
+                    <select id="presPatient" class="form-control" onchange="filterAppointments()" required>
+                      <option value="" disabled selected>Select Registered Patient</option>
+                    </select>
+                  </div>
+                  <div class="form-group">
+                    <label for="presAppointment">Linked Appointment ID</label>
+                    <select id="presAppointment" class="form-control">
+                      <option value="">No linked appointment (Direct)</option>
+                    </select>
+                  </div>
+                </div>
+
+                <div class="form-group">
+                  <label for="presDiagnosis">Clinical Diagnosis Summary</label>
+                  <input type="text" id="presDiagnosis" class="form-control" placeholder="e.g. Acute Bronchitis, Viral Fever" required>
+                </div>
+
+                <div class="form-group">
+                  <label for="presMedicines">Medicines & Dosage Regimen</label>
+                  <textarea id="presMedicines" class="form-control" rows="4" placeholder="e.g. Paracetamol 650mg - 1 Tab - Thrice Daily (After Food)&#10;Amoxicillin 500mg - 1 Tab - Twice Daily" required></textarea>
+                </div>
+
+                <div class="form-row">
+                  <div class="form-group">
+                    <label for="presNotes">Doctor's Advisory Notes (Optional)</label>
+                    <textarea id="presNotes" class="form-control" rows="2" placeholder="Take bed rest. Keep hydrated. Drink warm water."></textarea>
+                  </div>
+                  <div class="form-group">
+                    <label for="presFollowUp">Follow-Up Visit Date (Optional)</label>
+                    <input type="date" id="presFollowUp" class="form-control">
+                  </div>
+                </div>
+
+                <div style="text-align: right; margin-top: 24px;">
+                  <button type="submit" class="btn btn-primary" style="padding: 12px 32px;">
+                    <i class="fas fa-file-prescription"></i> Submit Prescription
+                  </button>
+                </div>
+              </form>
+            </div>
+          </div>
+        </div>
+
+        <!-- SECTION: Manage Profile & Availability -->
+        <div id="section-profile" class="dashboard-section">
+          <div class="dashboard-grid single-col">
+            <div class="panel-card" style="max-width: 700px; margin: 0 auto;">
+              <div class="panel-header" style="border-bottom: 1px solid var(--border-color); padding-bottom: 16px;">
+                <h2>Practitioner Profile Settings</h2>
+              </div>
+              <form id="doctorProfileForm" style="margin-top: 24px;">
+                
+                <div class="form-row">
+                  <div class="form-group">
+                    <label for="profName">Full Name</label>
+                    <input type="text" id="profName" class="form-control" required>
+                  </div>
+                  <div class="form-group">
+                    <label for="profEmail">Email (Read Only)</label>
+                    <input type="email" id="profEmail" class="form-control" readonly style="background-color: var(--border-color)">
+                  </div>
+                </div>
+
+                <div class="form-row">
+                  <div class="form-group">
+                    <label for="profPhone">Contact Phone</label>
+                    <input type="tel" id="profPhone" class="form-control" required>
+                  </div>
+                  <div class="form-group">
+                    <label for="profSpecialization">Primary Specialization</label>
+                    <input type="text" id="profSpecialization" class="form-control" required>
+                  </div>
+                </div>
+
+                <div class="form-row">
+                  <div class="form-group">
+                    <label for="profExperience">Experience (Years)</label>
+                    <input type="number" id="profExperience" class="form-control" min="0" required>
+                  </div>
+                  <div class="form-group">
+                    <label for="profQualification">Clinical Qualification</label>
+                    <input type="text" id="profQualification" class="form-control" required>
+                  </div>
+                </div>
+
+                <div class="form-group">
+                  <label for="profAvailability">Active Availability Timings</label>
+                  <input type="text" id="profAvailability" class="form-control" required>
+                </div>
+
+                <div style="text-align: right; margin-top: 24px;">
+                  <button type="submit" class="btn btn-primary" style="padding: 12px 32px;">
+                    <i class="fas fa-save"></i> Save Profile Details
+                  </button>
+                </div>
+              </form>
+            </div>
+          </div>
+        </div>
+
+      </main>
+    </div>
+  </div>
+
+  <script src="js/app.js"></script>
+  <script>
+    // Doctor access control check
+    const session = getSession();
+    if (!session.token || session.role !== 'doctor') {
+      // Direct redirection logic to login/guard in checkAuthGuard
+      checkAuthGuard('doctor');
+    } else {
+      document.getElementById('sidebarUserName').textContent = session.name;
+      document.getElementById('sidebarAvatar').textContent = session.name.charAt(0).toUpperCase();
+      document.getElementById('welcomeText').textContent = `Welcome Practitioner, ${session.name}!`;
+    }
+
+    function switchSection(sectionId, element) {
+      document.querySelectorAll('.dashboard-section').forEach(sec => sec.classList.remove('active'));
+      const targetSec = document.getElementById(`section-${sectionId}`);
+      if (targetSec) targetSec.classList.add('active');
+
+      document.querySelectorAll('.sidebar-link').forEach(link => link.classList.remove('active'));
+      if (element) element.classList.add('active');
+
+      const sidebar = document.getElementById('sidebar');
+      if (sidebar.classList.contains('active')) {
+        sidebar.classList.remove('active');
+      }
+    }
+
+    function toggleSidebar() {
+      document.getElementById('sidebar').classList.toggle('active');
+    }
+
+    let doctorProfile = null;
+    let appointmentsList = [];
+    let uniquePatients = [];
+
+    document.addEventListener("DOMContentLoaded", () => {
+      // Set min date of prescription follow-up to today
+      const today = new Date().toISOString().split('T')[0];
+      if (document.getElementById('presFollowUp')) {
+        document.getElementById('presFollowUp').setAttribute('min', today);
+      }
+
+      loadDoctorDashboard();
+    });
+
+    async function loadDoctorDashboard() {
+      try {
+        await loadDoctorProfile();
+      } catch (err) {
+        console.error("Profile load err:", err);
+      }
+    }
+
+    async function loadDoctorProfile() {
+      try {
+        // Guard check endpoint
+        const data = await apiRequest('/api/doctors/profile');
+        doctorProfile = data;
+
+        document.getElementById('profName').value = data.user.name;
+        document.getElementById('profEmail').value = data.user.email;
+        document.getElementById('profPhone').value = data.phone || '';
+        document.getElementById('profSpecialization').value = data.specialization || '';
+        document.getElementById('profExperience').value = data.experience || '';
+        document.getElementById('profQualification').value = data.qualification || '';
+        document.getElementById('profAvailability').value = data.availability || '';
+        
+        // Show normal screen, hide pending screen
+        document.getElementById('normalDashboard').style.display = 'block';
+        document.getElementById('pendingApprovalScreen').style.display = 'none';
+        
+        // Load operational database records
+        await loadAppointments();
+      } catch (e) {
+        if (e.message.includes("Verification") || e.message.includes("Verma") || e.message.includes("pending administrator approval")) {
+          // Show restricted approval screen
+          document.getElementById('normalDashboard').style.display = 'none';
+          document.getElementById('pendingApprovalScreen').style.display = 'flex';
+        } else {
+          showToast('Profile Error', e.message, 'danger');
+        }
+      }
+    }
+
+    async function loadAppointments() {
+      try {
+        const list = await apiRequest('/api/appointments');
+        appointmentsList = list;
+
+        // Render views
+        renderOverviewDashboard();
+        renderFullAppointments();
+        populatePatientsDropdown();
+      } catch (e) {
+        showToast('Schedule Error', e.message, 'danger');
+      }
+    }
+
+    function renderOverviewDashboard() {
+      const pendingBody = document.getElementById('overviewPendingBody');
+      const scheduleList = document.getElementById('todayScheduleList');
+      
+      const pendingApps = appointmentsList.filter(app => app.status === 'Pending');
+      const todayDateStr = new Date().toISOString().split('T')[0];
+      const todayApps = appointmentsList.filter(app => app.appointment_date === todayDateStr && app.status === 'Approved');
+
+      // Update counters
+      document.getElementById('cardToday').textContent = todayApps.length;
+      document.getElementById('cardPending').textContent = pendingApps.length;
+      document.getElementById('cardCompleted').textContent = appointmentsList.filter(app => app.status === 'Approved' && new Date(app.appointment_date) < new Date(todayDateStr)).length;
+
+      // Unique patients filter
+      const pIds = appointmentsList.map(app => app.patient_id);
+      uniquePatients = [...new Set(pIds)];
+      document.getElementById('cardPatients').textContent = uniquePatients.length;
+
+      // Render Pending Table
+      if (pendingApps.length === 0) {
+        pendingBody.innerHTML = '<tr><td colspan="5" style="text-align: center; color: var(--text-light)">No pending requests.</td></tr>';
+      } else {
+        pendingBody.innerHTML = '';
+        pendingApps.forEach(app => {
+          const formattedDate = new Date(app.appointment_date).toLocaleDateString('en-US', { day: 'numeric', month: 'short', year: 'numeric' });
+          const tr = document.createElement('tr');
+          tr.innerHTML = `
+            <td><strong>${app.patient_name}</strong><br><small style="color:var(--text-light)">${app.patient_phone}</small></td>
+            <td>${formattedDate}</td>
+            <td>${app.appointment_time}</td>
+            <td><small>${app.symptoms || '-'}</small></td>
+            <td>
+              <div class="table-actions">
+                <button class="action-btn btn-approve" onclick="updateStatus(${app.appointment_id}, 'Approved')" title="Approve"><i class="fas fa-check"></i></button>
+                <button class="action-btn btn-reject" onclick="updateStatus(${app.appointment_id}, 'Rejected')" title="Reject"><i class="fas fa-times"></i></button>
+              </div>
+            </td>
+          `;
+          pendingBody.appendChild(tr);
+        });
+      }
+
+      // Render Today's Schedule Cards
+      if (todayApps.length === 0) {
+        scheduleList.innerHTML = '<div style="text-align: center; color: var(--text-light); padding: 24px 0;">No active consultations scheduled for today.</div>';
+      } else {
+        scheduleList.innerHTML = '';
+        todayApps.forEach(app => {
+          const item = document.createElement('div');
+          item.className = 'list-item';
+          item.innerHTML = `
+            <div class="list-item-content">
+              <h4>${app.patient_name}</h4>
+              <p><i class="far fa-clock"></i> ${app.appointment_time} &bull; phone: ${app.patient_phone}</p>
+            </div>
+            <button class="btn btn-secondary btn-sm" onclick="triggerWritePrescription(${app.patient_id}, ${app.appointment_id})">
+              <i class="fas fa-notes-medical"></i> Prescribe
+            </button>
+          `;
+          scheduleList.appendChild(item);
+        });
+      }
+    }
+
+    function renderFullAppointments() {
+      const body = document.getElementById('appointmentsHistoryBody');
+      const sorted = [...appointmentsList].reverse();
+
+      if (sorted.length === 0) {
+        body.innerHTML = '<tr><td colspan="8" style="text-align: center; color: var(--text-light)">No appointments booked yet.</td></tr>';
+        return;
+      }
+
+      body.innerHTML = '';
+      sorted.forEach(app => {
+        const formattedDate = new Date(app.appointment_date).toLocaleDateString('en-US', { day: 'numeric', month: 'short', year: 'numeric' });
+        const badge = getStatusBadgeClass(app.status);
+        
+        let actionHTML = '-';
+        if (app.status === 'Pending') {
+          actionHTML = `
+            <div class="table-actions">
+              <button class="action-btn btn-approve" onclick="updateStatus(${app.appointment_id}, 'Approved')" title="Approve"><i class="fas fa-check"></i></button>
+              <button class="action-btn btn-reject" onclick="updateStatus(${app.appointment_id}, 'Rejected')" title="Reject"><i class="fas fa-times"></i></button>
+            </div>
+          `;
+        } else if (app.status === 'Approved') {
+          actionHTML = `
+            <button class="btn btn-secondary btn-sm" style="padding: 4px 8px; font-size:0.8rem;" onclick="triggerWritePrescription(${app.patient_id}, ${app.appointment_id})">
+              <i class="fas fa-file-prescription"></i> Prescribe
+            </button>
+          `;
+        }
+
+        const tr = document.createElement('tr');
+        tr.innerHTML = `
+          <td>#APT-${app.appointment_id}</td>
+          <td><strong>${app.patient_name}</strong></td>
+          <td>${app.patient_phone || '-'}</td>
+          <td>${formattedDate}</td>
+          <td>${app.appointment_time}</td>
+          <td><small>${app.symptoms || '-'}</small></td>
+          <td><span class="badge ${badge}">${app.status}</span></td>
+          <td>${actionHTML}</td>
+        `;
+        body.appendChild(tr);
+      });
+    }
+
+    function populatePatientsDropdown() {
+      const select = document.getElementById('presPatient');
+      select.innerHTML = '<option value="" disabled selected>Select Registered Patient</option>';
+
+      // Get map of unique patient records from appointments
+      const patientMap = {};
+      appointmentsList.forEach(app => {
+        patientMap[app.patient_id] = app.patient_name;
+      });
+
+      Object.keys(patientMap).forEach(id => {
+        const opt = document.createElement('option');
+        opt.value = id;
+        opt.textContent = patientMap[id];
+        select.appendChild(opt);
+      });
+    }
+
+    function filterAppointments() {
+      const patientId = parseInt(document.getElementById('presPatient').value);
+      const select = document.getElementById('presAppointment');
+      
+      select.innerHTML = '<option value="">No linked appointment (Direct)</option>';
+      
+      const filtered = appointmentsList.filter(app => app.patient_id === patientId && app.status === 'Approved');
+      filtered.forEach(app => {
+        const opt = document.createElement('option');
+        opt.value = app.appointment_id;
+        opt.textContent = `Apt #${app.appointment_id} (${app.appointment_date})`;
+        select.appendChild(opt);
+      });
+    }
+
+    function triggerWritePrescription(patId, appId) {
+      switchSection('prescription', document.querySelectorAll('.sidebar-link')[2]);
+      document.getElementById('presPatient').value = patId;
+      filterAppointments();
+      document.getElementById('presAppointment').value = appId || '';
+    }
+
+    async function updateStatus(appId, newStatus) {
+      try {
+        await apiRequest(`/api/appointments/${appId}/status`, {
+          method: 'PUT',
+          body: JSON.stringify({ status: newStatus })
+        });
+        
+        showToast('Success', `Appointment has been marked as ${newStatus}.`, 'success');
+        await loadAppointments();
+      } catch (err) {
+        showToast('Action Failed', err.message, 'danger');
+      }
+    }
+
+    function getStatusBadgeClass(status) {
+      if (status === 'Approved') return 'badge-approved';
+      if (status === 'Pending') return 'badge-pending';
+      if (status === 'Rejected') return 'badge-rejected';
+      return 'badge-cancelled';
+    }
+
+    // Prescription compilation submission
+    document.getElementById('prescriptionForm').addEventListener('submit', async (e) => {
+      e.preventDefault();
+
+      const patient_id = parseInt(document.getElementById('presPatient').value);
+      const appointment_id = parseInt(document.getElementById('presAppointment').value) || null;
+      const diagnosis = document.getElementById('presDiagnosis').value.trim();
+      const medicines = document.getElementById('presMedicines').value.trim();
+      const notes = document.getElementById('presNotes').value.trim();
+      const follow_up_date = document.getElementById('presFollowUp').value || null;
+
+      try {
+        await apiRequest('/api/appointments/prescriptions', {
+          method: 'POST',
+          body: JSON.stringify({ patient_id, appointment_id, diagnosis, medicines, notes, follow_up_date })
+        });
+
+        showToast('Prescribed', 'Prescription has been created and logged successfully.', 'success');
+        document.getElementById('prescriptionForm').reset();
+        switchSection('overview', document.querySelectorAll('.sidebar-link')[0]);
+      } catch (err) {
+        showToast('Failed to log', err.message, 'danger');
+      }
+    });
+
+    // Profile Settings Form submission
+    document.getElementById('doctorProfileForm').addEventListener('submit', async (e) => {
+      e.preventDefault();
+
+      const name = document.getElementById('profName').value.trim();
+      const phone = document.getElementById('profPhone').value.trim();
+      const specialization = document.getElementById('profSpecialization').value.trim();
+      const experience = parseInt(document.getElementById('profExperience').value);
+      const qualification = document.getElementById('profQualification').value.trim();
+      const availability = document.getElementById('profAvailability').value.trim();
+
+      try {
+        await apiRequest('/api/doctors/profile', {
+          method: 'PUT',
+          body: JSON.stringify({ name, phone, specialization, experience, qualification, availability })
+        });
+
+        showToast('Profile Saved', 'Your settings and availability slots have been updated.', 'success');
+        
+        // Update browser session details
+        const session = getSession();
+        saveSession(session.token, session.role, name, session.email);
+        
+        document.getElementById('sidebarUserName').textContent = name;
+        document.getElementById('sidebarAvatar').textContent = name.charAt(0).toUpperCase();
+        document.getElementById('welcomeText').textContent = `Welcome Practitioner, ${name}!`;
+
+      } catch (err) {
+        showToast('Update Failed', err.message, 'danger');
+      }
+    });
+  </script>
+</body>
+</html>

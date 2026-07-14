@@ -1,0 +1,324 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Srishti Care - Healthcare Management System</title>
+  <link rel="stylesheet" href="css/style.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+
+  <!-- Navigation Bar -->
+  <nav class="navbar">
+    <div class="container">
+      <a href="index.html" class="logo">
+        <i class="fas fa-heartbeat"></i> Srishti <span>Care</span>
+      </a>
+      <ul class="nav-links">
+        <li><a href="#home" class="active">Home</a></li>
+        <li><a href="#about">About Us</a></li>
+        <li><a href="#services">Services</a></li>
+        <li><a href="#contact">Contact</a></li>
+      </ul>
+      <div class="nav-auth" id="navAuthContainer">
+        <a href="login.html" class="btn btn-outline">Login</a>
+        <a href="signup.html" class="btn btn-primary">Sign Up</a>
+      </div>
+    </div>
+  </nav>
+
+  <!-- Hero Section -->
+  <section class="hero" id="home">
+    <div class="container">
+      <div class="hero-grid">
+        <div class="hero-content">
+          <div class="hero-tag">
+            <i class="fas fa-shield-halved"></i> Reliable & Professional Care
+          </div>
+          <h1>Your Health Is Our <span>Top Priority</span></h1>
+          <p>Srishti Care provides seamless scheduling, direct consulting, and digital prescriptions to connect patients and expert physicians instantly.</p>
+          <div class="hero-actions" id="heroActions">
+            <a href="login.html?redirect=book" class="btn btn-primary">
+              <i class="fas fa-calendar-check"></i> Book Appointment
+            </a>
+            <a href="#services" class="btn btn-secondary">
+              <i class="fas fa-search"></i> Find Doctor
+            </a>
+          </div>
+        </div>
+        <div class="hero-image-wrapper">
+          <img src="assets/srishti_care_hero.png" alt="Srishti Care Banner" class="hero-image">
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Statistics Section -->
+  <section class="stats-section">
+    <div class="container">
+      <div class="stats-grid">
+        <div class="stats-card">
+          <div class="stats-icon">
+            <i class="fas fa-user-md"></i>
+          </div>
+          <div class="stats-info">
+            <h3 id="statDoctors">15+</h3>
+            <p>Total Doctors</p>
+          </div>
+        </div>
+        <div class="stats-card">
+          <div class="stats-icon">
+            <i class="fas fa-user-injured"></i>
+          </div>
+          <div class="stats-info">
+            <h3 id="statPatients">250+</h3>
+            <p>Total Patients</p>
+          </div>
+        </div>
+        <div class="stats-card">
+          <div class="stats-icon">
+            <i class="fas fa-calendar-check"></i>
+          </div>
+          <div class="stats-info">
+            <h3 id="statAppointments">1,200+</h3>
+            <p>Appointments Completed</p>
+          </div>
+        </div>
+        <div class="stats-card">
+          <div class="stats-icon">
+            <i class="fas fa-hospital"></i>
+          </div>
+          <div class="stats-info">
+            <h3 id="statDepartments">8</h3>
+            <p>Specialized Departments</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Services Section -->
+  <section class="section-padding" id="services">
+    <div class="container">
+      <div class="section-title">
+        <h2>Our Medical Services</h2>
+        <p>Providing high-quality clinical support, patient consultations, and efficient records management.</p>
+      </div>
+      <div class="services-grid">
+        <div class="service-card">
+          <div class="service-icon">
+            <i class="fas fa-calendar-alt"></i>
+          </div>
+          <h3>Appointment Booking</h3>
+          <p>Book convenient date and time slots with qualified medical doctors instantly.</p>
+        </div>
+        <div class="service-card">
+          <div class="service-icon">
+            <i class="fas fa-stethoscope"></i>
+          </div>
+          <h3>Doctor Consultation</h3>
+          <p>Obtain professional counseling, disease diagnoses, and expert guidance.</p>
+        </div>
+        <div class="service-card">
+          <div class="service-icon">
+            <i class="fas fa-file-medical"></i>
+          </div>
+          <h3>Patient Records</h3>
+          <p>Safely store and view details about your medical profile and health updates online.</p>
+        </div>
+        <div class="service-card">
+          <div class="service-icon">
+            <i class="fas fa-file-prescription"></i>
+          </div>
+          <h3>Health Reports</h3>
+          <p>Instantly access, print, and download prescriptions drafted by your practitioner.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- About Us Section -->
+  <section class="section-padding about-section" id="about">
+    <div class="container">
+      <div class="about-grid">
+        <div class="about-image-wrapper">
+          <img src="assets/srishti_care_hero.png" alt="About Srishti Care" class="about-image" style="transform: scaleX(-1); opacity: 0.85;">
+        </div>
+        <div class="about-content">
+          <h3>Who We Are</h3>
+          <h2>Pioneering Digital Health Care Management</h2>
+          <p>At Srishti Care, we bridge the gap between healthcare experts and patients. Our system coordinates patient schedules, approves clinical appointments, and logs electronic prescriptions securely.</p>
+          <ul class="about-bullets">
+            <li><i class="fas fa-check-circle"></i> Certified specialist practitioners</li>
+            <li><i class="fas fa-check-circle"></i> Emergency appointment priority updates</li>
+            <li><i class="fas fa-check-circle"></i> Electronic records accessible anytime</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Contact Us Section -->
+  <section class="section-padding" id="contact">
+    <div class="container">
+      <div class="section-title">
+        <h2>Get in Touch</h2>
+        <p>Have questions? Reach out to our customer care team or visit Srishti Care clinic.</p>
+      </div>
+
+      <div class="about-grid" style="align-items: flex-start;">
+        <div class="panel-card" style="margin-bottom: 0;">
+          <h2 style="margin-bottom: 24px;"><i class="fas fa-envelope-open-text" style="color:var(--primary)"></i> Send us a message</h2>
+          <form id="contactForm" onsubmit="event.preventDefault(); showToast('Message Sent', 'Thank you! Srishti Care support will reply within 24 hours.', 'success'); this.reset();">
+            <div class="form-group">
+              <label for="cName">Your Name</label>
+              <input type="text" id="cName" class="form-control" placeholder="Jane Doe" required>
+            </div>
+            <div class="form-group">
+              <label for="cEmail">Email Address</label>
+              <input type="email" id="cEmail" class="form-control" placeholder="jane@example.com" required>
+            </div>
+            <div class="form-group">
+              <label for="cMessage">Message</label>
+              <textarea id="cMessage" class="form-control" rows="4" placeholder="How can we assist you?" required></textarea>
+            </div>
+            <button type="submit" class="btn btn-primary" style="width: 100%;">Submit Inquiry</button>
+          </form>
+        </div>
+
+        <div style="padding-top: 20px;">
+          <h3 style="color:var(--primary); font-weight:600; margin-bottom:12px;">Contact Information</h3>
+          <p style="color:var(--text-light); margin-bottom:30px;">Reach us directly via email, phone, or stop by our primary care facility.</p>
+          
+          <ul class="contact-info" style="list-style: none;">
+            <li>
+              <i class="fas fa-map-marker-alt"></i>
+              <div>
+                <strong>Location</strong>
+                <p>Srishti Care Plaza, Sector 10, Dwarka, New Delhi - 110075</p>
+              </div>
+            </li>
+            <li>
+              <i class="fas fa-phone-alt"></i>
+              <div>
+                <strong>Phone Support</strong>
+                <p>+91 (011) 2508-8800 / +91 98765 43210</p>
+              </div>
+            </li>
+            <li>
+              <i class="fas fa-envelope"></i>
+              <div>
+                <strong>Support Email</strong>
+                <p>support@srishticare.com</p>
+              </div>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer>
+    <div class="container">
+      <div class="footer-grid">
+        <div class="footer-col">
+          <div class="footer-logo">
+            <i class="fas fa-heartbeat"></i> Srishti <span>Care</span>
+          </div>
+          <p>Delivering reliable, role-based, modern health records and medical consulting solutions.</p>
+          <div class="social-links">
+            <a href="#"><i class="fab fa-facebook-f"></i></a>
+            <a href="#"><i class="fab fa-twitter"></i></a>
+            <a href="#"><i class="fab fa-instagram"></i></a>
+            <a href="#"><i class="fab fa-linkedin-in"></i></a>
+          </div>
+        </div>
+        <div class="footer-col">
+          <h3>Quick Links</h3>
+          <ul class="footer-links">
+            <li><a href="#home">Home</a></li>
+            <li><a href="#about">About Us</a></li>
+            <li><a href="#services">Services</a></li>
+            <li><a href="#contact">Contact</a></li>
+          </ul>
+        </div>
+        <div class="footer-col">
+          <h3>Services</h3>
+          <ul class="footer-links">
+            <li><a href="#services">Book Appointment</a></li>
+            <li><a href="#services">Consultations</a></li>
+            <li><a href="#services">Medical Records</a></li>
+            <li><a href="#services">Prescriptions</a></li>
+          </ul>
+        </div>
+        <div class="footer-col">
+          <h3>Working Hours</h3>
+          <p style="margin-bottom: 12px;">Our clinical desk and support lines are active during these slots:</p>
+          <p><strong>Mon - Fri:</strong> 9:00 AM - 8:00 PM</p>
+          <p><strong>Saturday:</strong> 10:00 AM - 6:00 PM</p>
+          <p><strong>Sunday:</strong> Emergencies Only</p>
+        </div>
+      </div>
+      <div class="footer-bottom">
+        <p>&copy; 2026 Srishti Care Healthcare Management System. All Rights Reserved.</p>
+        <p>Built with <i class="fas fa-heart" style="color:var(--danger)"></i> for Python Developers</p>
+      </div>
+    </div>
+  </footer>
+
+  <script src="js/app.js"></script>
+  <script>
+    // Handle dynamic login status updates in Navbar and Hero
+    document.addEventListener("DOMContentLoaded", () => {
+      const session = getSession();
+      const authNav = document.getElementById('navAuthContainer');
+      const heroActions = document.getElementById('heroActions');
+      
+      if (session.token) {
+        // Logged in
+        let dashboardPage = 'patient_dashboard.html';
+        if (session.role === 'doctor') dashboardPage = 'doctor_dashboard.html';
+        if (session.role === 'admin') dashboardPage = 'admin_dashboard.html';
+
+        authNav.innerHTML = `
+          <span style="color:var(--text-main); font-weight:600; font-size:0.9rem;">
+            <i class="fas fa-circle-user" style="color:var(--primary)"></i> Hi, ${session.name.split(' ')[0]}
+          </span>
+          <a href="${dashboardPage}" class="btn btn-primary btn-sm" style="padding: 6px 16px; font-size:0.85rem">
+            Dashboard <i class="fas fa-arrow-right"></i>
+          </a>
+          <button onclick="apiLogout()" class="btn btn-outline btn-sm" style="padding: 6px 12px; font-size:0.85rem">
+            <i class="fas fa-sign-out-alt"></i>
+          </button>
+        `;
+
+        heroActions.innerHTML = `
+          <a href="${dashboardPage}" class="btn btn-primary">
+            <i class="fas fa-chalkboard-user"></i> Go to Dashboard
+          </a>
+          <button onclick="apiLogout()" class="btn btn-outline">
+            <i class="fas fa-sign-out-alt"></i> Logout
+          </button>
+        `;
+      }
+      
+      // Fetch platform stats to populate landing page count dynamically
+      fetchStats();
+    });
+
+    async function fetchStats() {
+      try {
+        const response = await fetch('/api/doctors');
+        if (response.ok) {
+          const docs = await response.json();
+          document.getElementById('statDoctors').textContent = `${docs.length}+`;
+        }
+      } catch (err) {
+        console.warn("Public statistics fetching skipped:", err);
+      }
+    }
+  </script>
+</body>
+</html>
